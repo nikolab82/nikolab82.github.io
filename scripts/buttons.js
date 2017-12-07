@@ -1,0 +1,3 @@
+function collapse_menu() {
+    
+}

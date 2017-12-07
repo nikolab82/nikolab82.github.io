@@ -1,0 +1,16 @@
+.wrapper {
+    margin: auto;
+}
+
+/* For adjusting width */
+.w-100 { width: 100%; }
+.w-90 { width: 90%; }
+.w-80 { width: 80%; }
+.w-60 { width: 60%; }
+.w-40 { width: 40%; }
+.w-20 { width: 20%; }
+
+/* Text align */
+.txt-left { text-align: left; }
+.txt-center { text-align: center; }
+.txt-right { text-align: right; }

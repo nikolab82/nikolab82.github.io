@@ -1,44 +1,171 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Home</title>
-        <link href="style.css"rel="stylesheet"type="text/css" />
-    </head>
-    <body>
-        <div id="header">
-            <center>
-                <table>
-                    <tr>
-                        <th><img src="multimedia\grb.png" height="160" width="160"></th>
-                        <th>
-                            <div>
-                                <center>
-                                    <h1>SEKCIJA ZA ROBOTIKU</h1>
-                                </center>
-                                <div id="navbar">
-                                    <ul>
-                                        <li><a href="">Home</a></li>
-                                        <li><a href="subpages\projekti.html">Lista projekata</a></li>
-                                        <li><a href="subpages\istorijat.html">Istorijat sekcije</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </th>
-                    </tr>
-                </table>
-            </center>
+
+<head>
+    <meta charset="utf-8">
+    <title>SEKCIJA IZ ROBOTIKE</title>
+
+    <!-- Local stylesheets -->
+    <link rel="stylesheet" href="styles/main.css" type="text/css">
+    <link rel="stylesheet" href="styles/visual_effects.css" type="text/css">
+    <link rel="stylesheet" href="styles/wrappers.css" type="text/css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Share+Tech">
+
+</head>
+
+<body>
+
+    <!-- External JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Local JavaScript -->
+    <script src="scripts/lista_projekata.js" charset="utf-8"></script>
+    <script src="scripts/buttons.js" charset="utf-8"></script>
+
+    <!-- Content displayed on page -->
+    <div id="sidemenu" class="shadow-right-medium">
+
+        <div class="header shadow-bottom-weak">
+            <center><h1>Sekcija iz Robotike</h1></center>
         </div>
-        <div id="holder">
-            <p>Probni tekst</p>
-            <code>
-				print('Hello World!')
-			</code>
-            <p>Probni tekst</p>
+
+        <div class="button">
+            <a href="#">Home</a>
         </div>
-        <div id="sidebar">
-            <p>Sidebar</p>
-            <p>Probni tekst</p>
-            <p>Probni tekst</p>
+
+        <div class="button">
+            <a href="subpages/arhiv.html">Arhiv projekata</a>
         </div>
-    </body>
+
+        <div class="button">
+            <a href="subpages/istorijat.html">Istorijat sekcije</a>
+        </div>
+
+        <div class="collapse-btn">
+            <img src="multimedia/images/left_arrow.png" onclick="collapse_menu()">
+        </div>
+
+    </div>
+
+    <div id="content">
+
+        <h1>Projekat - Arduino Kola</h1>
+        <hr>
+
+        <div class="pane-text shadow-all-strong">
+            <div class="wrapper w-90 txt-left">
+                <p>Deo koda:</p>
+                <div class="pane-code w-100 shadow-all-weak">
+                    <div class="wrapper w-80 txt-left">
+                        <pre>
+
+void setup() {
+  Serial.begin(9600);           // set up Serial library at 9600 bps
+  //Serial.println("Motor party!");
+
+  Serial1.begin(9600);
+
+
+  // turn on motor #2
+  motor_drive.setSpeed(200);
+
+  motor_turn.setSpeed(255);
+}
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pane-code shadow-all-strong">
+            <div class="wrapper w-80 txt-left">
+                <p>Kod koriscen za projekat arduino kola u celini:</p>
+                <pre>
+
+// Adafruit Motor shield library
+// copyright Adafruit Industries LLC, 2009
+// this code is public domain, enjoy!
+
+#include &lt;AFMotor.h&gt;
+
+AF_DCMotor motor_drive(1);
+AF_DCMotor motor_turn(4);
+
+String comms_signal = "";
+String commands[3] = {"n", "n", "0"};
+
+void setup() {
+  Serial.begin(9600);           // set up Serial library at 9600 bps
+  //Serial.println("Motor party!");
+
+  Serial1.begin(9600);
+
+
+  // turn on motor #2
+  motor_drive.setSpeed(200);
+
+  motor_turn.setSpeed(255);
+}
+
+
+String str_section = "";
+int curr_command = 0;
+
+// Test the DC motor, stepper and servo ALL AT ONCE!
+void loop() {
+    if(Serial1.available()>0){
+        comms_signal = char(Serial1.read());
+
+        if(comms_signal == ","){
+          commands[curr_command] = str_section;
+          str_section = "";
+          curr_command++;
+        }
+        else if(comms_signal == "!"){
+          commands[curr_command] = str_section;
+          curr_command = 0;
+          str_section = "";
+        }
+        else{
+          str_section += comms_signal;
+        }
+      }
+
+    // Up - Down
+    if(commands[0] == "u"){
+      Serial.println("UP");
+      motor_drive.run(FORWARD);
+    }
+    else if(commands[0] == "d"){
+      motor_drive.run(BACKWARD);
+    }
+    else if(commands[0] == "n"){
+      motor_drive.run(RELEASE);
+    }
+
+    // Left - Right
+    if(commands[1] == "l"){
+      Serial.println("LEFT");
+      motor_turn.run(FORWARD);
+    }
+    else if(commands[1] == "r"){
+      motor_turn.run(BACKWARD);
+    }
+    else if(commands[1] == "n"){
+      motor_turn.run(RELEASE);
+    }
+
+    //Serial.print(commands[2]);
+    motor_drive.setSpeed(commands[2].toInt());
+    }
+
+                </pre></div>
+            </div>
+        </div>
+
+</body>
+
 </html>
